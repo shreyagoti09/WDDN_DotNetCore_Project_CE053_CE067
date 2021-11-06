@@ -1,46 +1,108 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] -Todos </title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link href="~/lib/Chart.js/Chart.css" rel="stylesheet" />
-    <script src="~/lib/Chart.js/chart.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Material Design for Bootstrap</title>
+    <!-- Font Awesome -->
+
+    <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" />
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+    <!-- MDB -->
+
+    <link href="~/lib/mdb/css/mdb.min.css" rel="stylesheet" />
+    <!-- Custom styles -->
+
+    <link href="~/lib/mastercss/style.css" rel="stylesheet" />
+  
 </head>
+
 <body>
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-4" href="#">ToDo</a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-
-            </li>
-        </ul>
-    </nav>
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 px-4 d-md-block bg-light sidebar collapse">
-                <div class="sidebar-sticky pt-3">
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            @Html.ActionLink("ToDos", "Index", "ToDoItems")
-                        </li>
-                        <li class="nav-item">
-                            @Html.ActionLink("Productivity", "Privacy", "Home")
-                        </li>
-                    </ul>
+    <!--Main Navigation-->
+    <header>
+        <!-- Sidebar -->
+        <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+            <div class="position-sticky">
+                <div  class="list-group list-group-flush mx-3 mt-4">
+                   
+                        @Html.ActionLink("ToDos", "Index", "ToDoItems", null, new { @class = "list-group-item list-group-item-action py-2 ripple" })
+                      @Html.ActionLink("Productivity", "Privacy", "Home", null, new { @class = "list-group-item list-group-item-action py-2 ripple" })
+                   
                 </div>
-            </nav>
+            </div>
+        </nav>
+        <!-- Sidebar -->
+        <!-- Navbar -->
+        <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+                <!-- Toggle button -->
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
 
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                @RenderBody()
-            </main>
+                <!-- Brand -->
+                <a class="navbar-brand" href="#">
+                    To-Do
+                </a>
+               
+                <!-- Right links -->
+                <ul class="navbar-nav ms-auto d-flex flex-row">
+                    
+                    <li class="nav-item me-3 me-lg-0">
+                        <a class="nav-link" href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
+
+
+
+                    <!-- Avatar -->
+                    <li class="nav-item dropdown">
+                        <a class="
+                  nav-link
+                  dropdown-toggle
+                  hidden-arrow
+                  d-flex
+                  align-items-center
+                " href="#" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                            <img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg" class="rounded-circle" height="22" alt="" loading="lazy" />
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">My profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- Container wrapper -->
+        </nav>
+        <!-- Navbar -->
+    </header>
+    <main role="main" style="margin-top: 58px;margin-right:100px">
+        <div class="container pt-4">
+            <div class="row h-100">
+                <div class=" col-11">
+                    @RenderBody()
+                </div>
+            </div>
+
         </div>
-    </div>
+        <!-- todolist -->
+        <!-- todolistend -->
+    </main>
+
+
+    <!-- todolist -->
+    <!-- todolistend -->
+
+
+    <script src="~/lib/mdb/js/mdb.min.js"></script>
+    <script src="~/lib/masterjs/script.js"></script>
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
