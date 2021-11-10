@@ -52,7 +52,7 @@ namespace To_Do
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ToDoItems}/{action=Index}/{id?}");
+                    pattern: "{controller=User}/{action=Home}/{id?}");
             });
         }
     }

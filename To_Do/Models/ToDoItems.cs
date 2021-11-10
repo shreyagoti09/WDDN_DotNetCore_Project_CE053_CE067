@@ -15,13 +15,16 @@ namespace To_Do.Models
         }
         [Key]
         public int todo_id { get; set; }
+
         [Column(TypeName ="varchar(MAX)")]
         public string task_name { get; set; }
+
         [Column(TypeName ="date")]
         public DateTime date_added 
         {
             get;set;
         }
+
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd MMM yy}")]
         [Column(TypeName = "date")]
         public DateTime due_date { get; set; }

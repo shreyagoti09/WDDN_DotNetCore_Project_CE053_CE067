@@ -33,8 +33,7 @@ namespace To_Do.Controllers
                 return NotFound();
             }
 
-            var toDoItems = await _context.toDoItems
-                .FirstOrDefaultAsync(m => m.todo_id == id);
+            var toDoItems = await _context.toDoItems.FirstOrDefaultAsync(m => m.todo_id == id);
             if (toDoItems == null)
             {
                 return NotFound();
@@ -46,7 +45,6 @@ namespace To_Do.Controllers
         // GET: ToDoItems/Create
         public IActionResult Create()
         {
-            
             return View();
         }
 

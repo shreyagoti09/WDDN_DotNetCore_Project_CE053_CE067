@@ -23,9 +23,6 @@
         <center>
             <div class="row">
                 <div class="col">
-                    <p>
-                        <a asp-action="Create">Create New</a>
-                    </p>
                     <div class="card mx-auto" style="background-color: #eff1f2">
                         <div class="card-body">
                             <div class="table-responsive-sm">
@@ -46,25 +43,27 @@
                                     <tbody>
                                         @foreach (var item in Model)
                                         {
-                                            <tr>
-                                                @*<td><a asp-action="Complete"  id="@item.todo_id" asp-route-id="@item.todo_id">Edit</a> </td>*@
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.task_name)
-                                                </td>
-
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.due_date)
-                                                </td>
-                                                <td>
-                                                    <a asp-action="Delete" asp-route-id="@item.todo_id">Mark as done</a>
-                                                </td>
-                                                <td>
-                                                    <a asp-action="Edit" asp-route-id="@item.todo_id">Edit</a>
-                                                </td>
-                                                <td>
-                                                    <a asp-action="Details" asp-route-id="@item.todo_id">Details</a>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            @*<td><a asp-action="Complete"  id="@item.todo_id" asp-route-id="@item.todo_id">Edit</a> </td>*@
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.task_name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.due_date)
+                                            </td>
+                                            <td>
+                                                <a asp-action="Details" asp-route-id="@item.todo_id">Details</a>
+                                            </td>
+                                            <td>
+                                                <a asp-action="Edit" asp-route-id="@item.todo_id">Edit</a>
+                                            </td>
+                                            <td>
+                                                <a asp-action="Delete" asp-route-id="@item.todo_id">Delete</a>
+                                            </td>
+                                            <td>
+                                                <a asp-action="Done" asp-route-id="@item.todo_id">Mark as done</a>
+                                            </td>
+                                        </tr>
                                         }
                                     </tbody>
 
@@ -72,6 +71,10 @@
                             </div>
                         </div>
                     </div>
+                    <br />
+                    <p>
+                        <button asp-action="Create" class="btn btn-primary">Add Task</button>
+                    </p>
                 </div>
             </div>
         </center>
