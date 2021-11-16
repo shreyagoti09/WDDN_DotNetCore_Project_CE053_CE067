@@ -14,6 +14,7 @@ namespace To_Do.Models
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int user_id { get; set; }
 
         [Column(TypeName = "varchar(50)")]

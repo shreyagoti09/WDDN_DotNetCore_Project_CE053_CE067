@@ -8,8 +8,7 @@ namespace To_Do.Models
         {
             
         }
-
-        public DbSet<User> user { get; set; }
+        public DbSet<User> User { get; set; }
 
     }
 }

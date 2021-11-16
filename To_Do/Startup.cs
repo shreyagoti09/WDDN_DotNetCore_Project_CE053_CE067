@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using To_Do.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace To_Do
 {
@@ -27,7 +24,14 @@ namespace To_Do
             services.AddControllersWithViews();
             services.AddDbContext<ToDos>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ToDoCon")));
-           
+            services.AddDbContext<UserContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("ToDoCon")));
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);//We set Time here 
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +51,8 @@ namespace To_Do
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

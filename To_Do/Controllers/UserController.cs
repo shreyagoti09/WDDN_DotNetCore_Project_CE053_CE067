@@ -12,9 +12,9 @@ namespace To_Do.Controllers
 {
     public class UserController : Controller
     {
-        private readonly User _context;
+        private readonly UserContext _context;
 
-        public UserController(User context)
+        public UserController(UserContext context)
         {
             _context = context;
         }
@@ -26,25 +26,57 @@ namespace To_Do.Controllers
 
         public ActionResult Login()
         {
+            ViewBag.Message = "";
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
+            User user = await _context.User.FirstOrDefaultAsync(u => u.user_email == email);
+            if (user != null)
+            {
+                if (String.Equals(user.password.Trim(), password))
+                {
+                    ViewBag.Message = "";
+                    HttpContext.Session.SetInt32("user_id", user.user_id);
+                    return RedirectToAction("Index", "ToDoItems");
+                }
+            }
+            ViewBag.Message = "Invalid Email or Password";
             return View();
         }
 
         public ActionResult Register()
         {
+            ViewBag.Message = "";
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string username, string email, string password)
+        public async Task<IActionResult> Register(string username, string email, string password, string password1)
         {
+            User usr = await _context.User.FirstOrDefaultAsync(u => u.user_email == email);
+            if (usr != null)
+                ViewBag.Message = "User is already Registered";
+            else
+            {
+                if (password == password1)
+                {
+                    ViewBag.Message = "";
+                    User user = new User();
+                    user.username = username;
+                    user.user_email = email;
+                    user.password = password;
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Login", "User");
+                }
+                else
+                    ViewBag.Message = "Confirm password not matched";
+            }
             return View();
         }
 
@@ -66,18 +98,12 @@ namespace To_Do.Controllers
             return View();
         }
 
-        // POST: UserController/Create
+        // GET: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("user_id,username, user_email, password")] User user)
+        public ActionResult Create(IFormCollection collection)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
+            return View();
         }
 
         // GET: UserController/Edit/5

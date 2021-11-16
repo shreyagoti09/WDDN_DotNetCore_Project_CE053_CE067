@@ -23,6 +23,7 @@ namespace To_Do.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.toDoItems.ToListAsync());
+            //return View(await _context.toDoItems.FindAsync(m => m.todo_id == id));
         }
 
         // GET: ToDoItems/Details/5
@@ -32,7 +33,6 @@ namespace To_Do.Controllers
             {
                 return NotFound();
             }
-
             var toDoItems = await _context.toDoItems.FirstOrDefaultAsync(m => m.todo_id == id);
             if (toDoItems == null)
             {
