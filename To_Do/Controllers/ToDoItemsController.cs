@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +23,8 @@ namespace To_Do.Controllers
         // GET: ToDoItems
         public async Task<IActionResult> Index()
         {
-            return View(await _context.toDoItems.ToListAsync());
-            //return View(await _context.toDoItems.FindAsync(m => m.todo_id == id));
+            int id = (int)HttpContext.Session.GetInt32("user_id");
+            return View(await _context.toDoItems.Where(m => m.user_id == id).ToListAsync());
         }
 
         // GET: ToDoItems/Details/5
@@ -57,6 +58,7 @@ namespace To_Do.Controllers
         {
             if (ModelState.IsValid)
             {
+                toDoItems.user_id = (int)HttpContext.Session.GetInt32("user_id");
                 _context.Add(toDoItems);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -71,7 +73,6 @@ namespace To_Do.Controllers
             {
                 return NotFound();
             }
-
             var toDoItems = await _context.toDoItems.FindAsync(id);
             if (toDoItems == null)
             {
@@ -87,11 +88,13 @@ namespace To_Do.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("todo_id,task_name,date_added,due_date")] ToDoItems toDoItems)
         {
+
             if (id != toDoItems.todo_id)
             {
                 return NotFound();
             }
-
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
+            toDoItems.user_id = user_id;
             if (ModelState.IsValid)
             {
                 try
@@ -122,9 +125,9 @@ namespace To_Do.Controllers
             {
                 return NotFound();
             }
-
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
             var toDoItems = await _context.toDoItems
-                .FirstOrDefaultAsync(m => m.todo_id == id);
+                .FirstOrDefaultAsync(m => m.todo_id == id && m.user_id == user_id);
             if (toDoItems == null)
             {
                 return NotFound();
@@ -139,9 +142,38 @@ namespace To_Do.Controllers
 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lastItem = _context.bargraphItems.OrderByDescending(x => x.date).FirstOrDefault();
-            //var lastItem = _context.bargraphItems.LastOrDefault<BargraphItems>();
-            if(lastItem.date== DateTime.Today)
+            var toDoItems = await _context.toDoItems.FindAsync(id);
+            _context.toDoItems.Remove(toDoItems);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Done(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
+            var toDoItems = await _context.toDoItems
+                .FirstOrDefaultAsync(m => m.todo_id == id && m.user_id == user_id);
+            if (toDoItems == null)
+            {
+                return NotFound();
+            }
+
+            return View(toDoItems);
+        }
+
+        // POST: ToDoItems/Delete/5
+        [HttpPost, ActionName("Done")]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> DoneConfirmed(int id)
+        {
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
+            var lastItem = _context.bargraphItems.FirstOrDefault(m => m.user_id == user_id);
+            if (lastItem.date == DateTime.Today)
             {
                 lastItem.completed_task += 1;
             }
@@ -150,6 +182,7 @@ namespace To_Do.Controllers
                 var bar = new BargraphItems();
                 bar.completed_task = 1;
                 bar.date = DateTime.Today;
+                bar.user_id = user_id;
                 _context.bargraphItems.Add(bar);
             }
             var toDoItems = await _context.toDoItems.FindAsync(id);
@@ -157,7 +190,7 @@ namespace To_Do.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            
+
         }
 
         private bool DbContextOptions()

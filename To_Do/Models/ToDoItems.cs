@@ -29,6 +29,8 @@ namespace To_Do.Models
         [Column(TypeName = "date")]
         public DateTime due_date { get; set; }
 
+        [ForeignKey("FK_toDoItems_User")]
+        public int user_id { get; set; }
     }
    
 }

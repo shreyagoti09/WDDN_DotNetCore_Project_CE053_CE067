@@ -17,6 +17,8 @@ namespace To_Do.Models
         public DateTime date { get; set; }
         [Column(TypeName = "int")]
         public int completed_task { get; set; }
-       
+
+        [ForeignKey("FK_bargraphItems_User")]
+        public int user_id { get; set; }
     }
 }

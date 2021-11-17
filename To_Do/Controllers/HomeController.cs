@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,8 @@ namespace To_Do.Controllers
         // chart js code
         public IActionResult getBarData()
         {
-            var result = _db.bargraphItems.GroupBy(m => m.date).Select(g => new { x=g.Key,y=g.Sum(i => i.completed_task) }).ToList();
+            int id = (int)HttpContext.Session.GetInt32("user_id");
+            var result = _db.bargraphItems.Where(m => m.user_id == id).GroupBy(m => m.date).Select(g => new { x=g.Key,y=g.Sum(i => i.completed_task) }).ToList();
             return Json(result);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

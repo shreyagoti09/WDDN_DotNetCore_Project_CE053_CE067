@@ -30,6 +30,12 @@ namespace To_Do.Controllers
             return View();
         }
 
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Home", "User");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(string email, string password)
@@ -87,44 +93,106 @@ namespace To_Do.Controllers
         }
 
         // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details()
         {
-            return View();
-        }
-
-        // GET: UserController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // GET: UserController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            return View();
+            int id = (int)HttpContext.Session.GetInt32("user_id");
+            if (id == 0)
+            {
+                return NotFound();
+            }
+            var user = await _context.User.FirstOrDefaultAsync(m => m.user_id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
         }
 
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await _context.User.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
         }
 
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, [Bind("user_id, username, user_email, password")] User user)
         {
-            try
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
+            if (id != user_id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Details));
             }
+            return View(user);
+        }
+
+        public async Task<IActionResult> ChangePassword(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await _context.User.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        // POST: UserController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(int id, string password, string new_password)
+        {
+            ViewBag.Message = id.ToString() + " " + password + " " + new_password;
+            int user_id = (int)HttpContext.Session.GetInt32("user_id");
+            if (id != user_id)
+            {
+                return NotFound();
+            }
+            User user = await _context.User.FirstOrDefaultAsync(m => m.user_id == id);
+            user.password = user.password.Trim();
+            ViewBag.Message = id.ToString() + " " + password + " " + user.password;
+            if (password == user.password)
+            {
+                ViewBag.Message = "Hello";
+                user.password = new_password;
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Details));
+            }
+            return View(user);
         }
 
         // GET: UserController/Delete/5
