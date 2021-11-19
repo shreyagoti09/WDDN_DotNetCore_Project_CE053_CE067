@@ -173,8 +173,9 @@ namespace To_Do.Controllers
         {
             int user_id = (int)HttpContext.Session.GetInt32("user_id");
             var lastItem = _context.bargraphItems.FirstOrDefault(m => m.user_id == user_id);
-            if (lastItem.date == DateTime.Today)
+            if (lastItem!= null)
             {
+                if(lastItem.date == DateTime.Today)
                 lastItem.completed_task += 1;
             }
             else
