@@ -172,11 +172,11 @@ namespace To_Do.Controllers
         public async Task<IActionResult> DoneConfirmed(int id)
         {
             int user_id = (int)HttpContext.Session.GetInt32("user_id");
-            var lastItem = _context.bargraphItems.FirstOrDefault(m => m.user_id == user_id);
+            var lastItem = _context.bargraphItems.FirstOrDefault(m => m.user_id == user_id && m.date == DateTime.Today);
             if (lastItem!= null)
             {
-                if(lastItem.date == DateTime.Today)
                 lastItem.completed_task += 1;
+                _context.Update(lastItem);
             }
             else
             {

@@ -13,8 +13,12 @@ namespace To_Do.Models
         {
             this.date = DateTime.Today;
         }
+
         [Key]
+        public int id { get; set; }
+
         public DateTime date { get; set; }
+
         [Column(TypeName = "int")]
         public int completed_task { get; set; }
 
